@@ -1,0 +1,91 @@
+
+数据集格式:
+统,O
+埃,B-PER
+斯,M-PER
+特,M-PER
+拉,M-PER
+达,E-PER
+２,O
+号,O
+透,O
+过,O
+马,B-GPE
+尼,M-GPE
+拉,E-GPE
+
+标签类别统计:
+未统计.
+
+分隔情况:
+原文中有句号,逗号.
+
+模型规划:
+
+
+--------------预处理---------------
+* 读取csv, 
+转换成两个大的一一对应的列表
+
+按照句号分隔列表,
+分割出两个二维列表,
+此时各个列表还不是矩阵,各个句子的长度没有对齐.
+[
+	[a,b],
+	[c,d,e],
+]
+
+使用tokenizer和label2id, 将所有文字转化为数字,
+然后将转化后达到的两个列表序列化.
+
+[
+	[1,2],
+	[3,4,5],
+]
+
+
+-------------DataSet-------------------
+__len__就是句子的数量
+__getitem__就是句子在大列表的索引
+同时写collate_fn, 对每个batch的句子们进行对齐,
+同时生成attention_mask
+
+
+DataSet
+
+batch_size=5
+DataLoader
+[1]
+[2,5,6,7]
+[3,4]
+for X,Y in dataloader
+
+
+------------模型内部---------------------
+(batch,seq)
+bert
+(batch,seq,768)
+linear
+(batch,seq,label_size)
+relu
+dropout
+softmax
+去除特殊token
+
+-----------基础softmax版本
+用argmax提取最大概率类比
+(batch,seq)
+交叉熵计算loss即可
+
+-----------crf版本
+crf解码得出最可能序列
+(batch,seq)
+交叉熵计算损失即可)
+
+
+
+
+
+
+
+
